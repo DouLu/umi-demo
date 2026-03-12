@@ -11,13 +11,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@alita/plugins": "^3.5.5",
     "@ant-design/icons": "^6.1.0",
     "antd": "^6.3.2",
+    "mockjs": "^1.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "umi": "^4.6.31"
   },
   "devDependencies": {
+    "@types/mockjs": "^1.0.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@umijs/max": "^4.6.31",

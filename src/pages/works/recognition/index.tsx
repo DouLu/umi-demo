@@ -1,21 +1,52 @@
 import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Table, TableProps, Tooltip } from "antd";
+import { useRequest } from "ahooks";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  Table,
+  TableProps,
+  Tooltip,
+} from "antd";
+
+type FieldType = {
+  idInfo?: { id: string; name: string; date?: string };
+  sName?: string;
+  type?: string;
+};
+type DataType = {
+  id: string;
+  sId: string;
+  type: "t1" | "t2";
+  status: "已完成" | "未开始" | "进行中";
+  sName: string;
+  l: string;
+  date: string;
+};
 
 export default () => {
-  const dataSource = [
-    {
-      id: "1",
-      type: "胡彦斌",
-      sId: "32",
-      sName: "西湖区湖底公园1号",
+  const { data } = useRequest(() =>
+    fetch("/api/list", { method: "GET" }).then((res) => res.json()),
+  );
+
+  // rowSelection object indicates the need for row selection
+  const rowSelection: TableProps<DataType>["rowSelection"] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows,
+      );
     },
-    {
-      id: "2",
-      type: "胡彦斌2",
-      sId: "322",
-      sName: "西湖区湖底公园1号2",
-    },
-  ];
+    getCheckboxProps: (record: DataType) => ({
+      disabled: record.id === "1", // Column configuration not to be checked
+      id: record.id,
+    }),
+  };
+
   const columns = [
     { title: "申请编号", dataIndex: "id" },
     { title: "服务编号", dataIndex: "sId" },
@@ -28,7 +59,7 @@ export default () => {
       title: "操作",
       dataIndex: "action",
       render: (value: any, record: any, index: number) => (
-        <Row gutter={10}>
+        <Row gutter={10} style={{ width: 100 }}>
           <Col>
             <Tooltip title="编辑">
               <Button type="primary" shape="circle" icon={<SearchOutlined />} />
@@ -44,29 +75,92 @@ export default () => {
     },
   ];
 
-  type DataType = {
-    id: string;
-    sId: string;
-  };
-  // rowSelection object indicates the need for row selection
-  const rowSelection: TableProps<DataType>["rowSelection"] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows,
-      );
-    },
-    getCheckboxProps: (record: DataType) => ({
-      disabled: record.id === "1", // Column configuration not to be checked
-      id: record.id,
-    }),
-  };
   return (
-    <div>
+    <div style={{ backgroundColor: "#fff", padding: 20 }}>
+      <Form
+        layout="vertical"
+        colon={false}
+        name="basic"
+        // labelCol={{ span: 8 }}
+        // wrapperCol={{ span: 16 }}
+        style={{ maxWidth: "100%" }}
+        initialValues={{ sName: "zhangsan" }}
+        // onFinish={onFinish}
+        // onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Row gutter={20}>
+          <Col span={12}>
+            <Form.Item<FieldType>
+              label="申请编号"
+              name="idInfo"
+              rules={[
+                { required: true, message: "Please input your username!" },
+              ]}
+            >
+              <Select
+                allowClear
+                defaultValue="122"
+                options={[{ label: "12", value: "122" }]}
+                placeholder="请选择"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item<FieldType>
+              label="制作人"
+              name="sName"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+
+          <Col span={6}>
+            <Form.Item<FieldType> name="type" label="公证行为细类">
+              <Select
+                options={[{ value: "t1", label: "细类1" }]}
+                placeholder="请选择"
+                allowClear
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={20}>
+          <Col>
+            <Form.Item label={null}>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label={null}>
+              <Button type="primary" htmlType="submit">
+                重置
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      <Row justify={"end"} gutter={20} style={{ marginBottom: 20 }}>
+        <Col>
+          <Button size="large" type="primary">
+            打印出来
+          </Button>
+        </Col>
+        <Col>
+          <Button size="large" type="primary">
+            确认签署
+          </Button>
+        </Col>
+      </Row>
       <Table
+        rowKey={"id"}
         rowSelection={{ type: "checkbox", ...rowSelection }}
-        dataSource={dataSource}
+        dataSource={data ? data?.data : []}
         columns={columns.map((c) => ({ ...c, key: c.dataIndex }))}
       />
     </div>
