@@ -1,19 +1,20 @@
 {
   "name": "umi-demo",
   "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env PORT=3000 umi dev",
-    "build": "cross-env ANALYZE=1 umi build"
+    "build": "cross-env ANALYZE=1 umi build",
+    "start": "cross-env PORT=3000 umi dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@alita/plugins": "^3.5.5",
     "@ant-design/icons": "^6.1.0",
     "antd": "^6.3.2",
+    "dayjs": "^1.11.19",
     "mockjs": "^1.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -23,7 +24,6 @@
     "@types/mockjs": "^1.0.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@umijs/max": "^4.6.31",
     "@umijs/plugins": "^4.6.31",
     "ahooks": "^3.9.6",
     "cross-env": "^10.1.0",

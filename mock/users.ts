@@ -12,8 +12,8 @@ export default {
       {
         id: "@id",
         sId: "@guid",
-        type: Mock.Random.pick(["t1", "t2"]),
-        status: Mock.Random.pick(["已完成", "未开始", "进行中"]),
+        type: Mock.Random.pick(["t1", "t2", "t3"]),
+        status: Mock.Random.pick(["pre", "doing", "done"]),
         sName: "@cname",
         l: "@cword",
         date: Mock.Random.datetime(),

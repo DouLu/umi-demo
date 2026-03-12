@@ -1,8 +1,10 @@
+import { CodeInfo } from "@/components/dlForm";
 import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
 import {
   Button,
   Col,
+  DatePicker,
   Form,
   Input,
   Row,
@@ -11,6 +13,7 @@ import {
   TableProps,
   Tooltip,
 } from "antd";
+import { useState } from "react";
 
 type FieldType = {
   idInfo?: { id: string; name: string; date?: string };
@@ -31,7 +34,16 @@ export default () => {
   const { data } = useRequest(() =>
     fetch("/api/list", { method: "GET" }).then((res) => res.json()),
   );
+  const [form] = Form.useForm();
+  const search = () => {
+    alert(JSON.stringify(form.getFieldsValue()));
+  };
+  const reset = () => {
+    form.resetFields();
+  };
 
+  const [disabled, setDisabled] = useState(true);
+  const [selectedRows, setSelectedRows] = useState<DataType[]>([]);
   // rowSelection object indicates the need for row selection
   const rowSelection: TableProps<DataType>["rowSelection"] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
@@ -40,11 +52,24 @@ export default () => {
         "selectedRows: ",
         selectedRows,
       );
+      setSelectedRows(selectedRows);
+      setDisabled(!selectedRows.length);
     },
     getCheckboxProps: (record: DataType) => ({
-      disabled: record.id === "1", // Column configuration not to be checked
+      disabled: record.id === "520000202102032773", // Column configuration not to be checked
       id: record.id,
     }),
+    // onSelect: (record, selected, selectRows, e) => {
+    // console.log("----", record, selected, selectRows, e);
+    // },
+  };
+
+  const handlePrint = () => {
+    alert(JSON.stringify(selectedRows.map((i) => i.sName)));
+  };
+
+  const handleSign = () => {
+    alert(JSON.stringify(selectedRows.map((i) => i.status)));
   };
 
   const columns = [
@@ -78,32 +103,22 @@ export default () => {
   return (
     <div style={{ backgroundColor: "#fff", padding: 20 }}>
       <Form
+        name="basic"
         layout="vertical"
         colon={false}
-        name="basic"
-        // labelCol={{ span: 8 }}
-        // wrapperCol={{ span: 16 }}
+        form={form}
         style={{ maxWidth: "100%" }}
-        initialValues={{ sName: "zhangsan" }}
-        // onFinish={onFinish}
-        // onFinishFailed={onFinishFailed}
+        initialValues={{
+          idInfo: { status: "pre" },
+          sName: "zhangsan",
+          type: "t1",
+        }}
         autoComplete="off"
       >
         <Row gutter={20}>
           <Col span={12}>
-            <Form.Item<FieldType>
-              label="申请编号"
-              name="idInfo"
-              rules={[
-                { required: true, message: "Please input your username!" },
-              ]}
-            >
-              <Select
-                allowClear
-                defaultValue="122"
-                options={[{ label: "12", value: "122" }]}
-                placeholder="请选择"
-              />
+            <Form.Item<FieldType> label="申请编号" name="idInfo">
+              <CodeInfo />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -121,7 +136,11 @@ export default () => {
           <Col span={6}>
             <Form.Item<FieldType> name="type" label="公证行为细类">
               <Select
-                options={[{ value: "t1", label: "细类1" }]}
+                options={[
+                  { value: "t1", label: "细类1" },
+                  { value: "t2", label: "细类2" },
+                  { value: "t3", label: "细类3" },
+                ]}
                 placeholder="请选择"
                 allowClear
               />
@@ -131,14 +150,14 @@ export default () => {
         <Row gutter={20}>
           <Col>
             <Form.Item label={null}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" onClick={search}>
                 搜索
               </Button>
             </Form.Item>
           </Col>
           <Col>
             <Form.Item label={null}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" onClick={reset}>
                 重置
               </Button>
             </Form.Item>
@@ -147,12 +166,22 @@ export default () => {
       </Form>
       <Row justify={"end"} gutter={20} style={{ marginBottom: 20 }}>
         <Col>
-          <Button size="large" type="primary">
+          <Button
+            size="large"
+            type="primary"
+            disabled={disabled}
+            onClick={handlePrint}
+          >
             打印出来
           </Button>
         </Col>
         <Col>
-          <Button size="large" type="primary">
+          <Button
+            size="large"
+            type="primary"
+            disabled={disabled}
+            onClick={handleSign}
+          >
             确认签署
           </Button>
         </Col>
