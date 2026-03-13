@@ -1,4 +1,13 @@
-import { Breadcrumb, Button, Layout, Menu, Result } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Layout,
+  Menu,
+  Modal,
+  Result,
+  Row,
+  Table,
+} from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { Outlet, useAppData, useNavigate } from "umi";
@@ -6,6 +15,8 @@ import logo from "@/assets/yay.jpg";
 import styles from "./index.less";
 import { buildMenuTree, unaccessible } from "@/routes/router";
 import { routesToMenu } from "@/routes";
+import { useRequest } from "ahooks";
+import { useEffect, useState } from "react";
 
 const items1 = Array.from({ length: 15 }).map((_, index) => ({
   key: index + 1,
@@ -20,6 +31,28 @@ export default () => {
   const { children } = clientRoutes[0];
   const items = routesToMenu(children);
   const menuData = buildMenuTree(children);
+
+  // 全局的信息提醒，只有用户点击了关闭对话框，才不再次显示
+  // 只要刷新页面还是会再次看到
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data } = useRequest(() =>
+    fetch("/api/notices", { method: "GET" }).then((res) => res.json()),
+  );
+  const handleOk = () => {
+    setIsModalOpen(false);
+    if (location.pathname !== "/user") {
+      navigate("/user");
+    }
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  useEffect(() => {
+    if (data?.data?.length) {
+      setIsModalOpen(true);
+    }
+  }, [data]);
+
   if (unaccessible.includes(location.pathname)) {
     return (
       <Result
@@ -68,6 +101,31 @@ export default () => {
           copyright@{year} footer
         </Footer>
       </Layout>
+
+      {/* 讯息对话框 */}
+      <Modal
+        title="必读信息提醒⏰"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button type="primary" onClick={handleOk}>
+            去看看
+          </Button>,
+          <Button onClick={handleCancel}>取消</Button>,
+        ]}
+      >
+        <Table<{ id: string; name: string; content: string }>
+          rowKey={"id"}
+          columns={[
+            { dataIndex: "name", title: "发送人", width: 80 },
+            { dataIndex: "content", title: "内容" },
+          ]}
+          dataSource={data?.data || []}
+          pagination={false}
+          scroll={{ y: 220 }}
+        />
+      </Modal>
     </Layout>
   );
 };

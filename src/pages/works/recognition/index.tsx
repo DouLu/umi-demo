@@ -9,6 +9,7 @@ import {
   Input,
   Row,
   Select,
+  Spin,
   Table,
   TableProps,
   Tooltip,
@@ -34,6 +35,7 @@ export default () => {
   const { data } = useRequest(() =>
     fetch("/api/list", { method: "GET" }).then((res) => res.json()),
   );
+
   const [form] = Form.useForm();
   const search = () => {
     alert(JSON.stringify(form.getFieldsValue()));
@@ -72,6 +74,14 @@ export default () => {
     alert(JSON.stringify(selectedRows.map((i) => i.status)));
   };
 
+  const handleEdit = async (record: DataType) => {
+    alert(record.sId);
+  };
+
+  const handleDelete = async (id: string) => {
+    alert(id);
+  };
+
   const columns = [
     { title: "申请编号", dataIndex: "id" },
     { title: "服务编号", dataIndex: "sId" },
@@ -83,16 +93,29 @@ export default () => {
     {
       title: "操作",
       dataIndex: "action",
-      render: (value: any, record: any, index: number) => (
+      render: (value: any, record: DataType, index: number) => (
         <Row gutter={10} style={{ width: 100 }}>
           <Col>
             <Tooltip title="编辑">
-              <Button type="primary" shape="circle" icon={<SearchOutlined />} />
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<SearchOutlined />}
+                onClick={() => {
+                  handleEdit(record);
+                }}
+              />
             </Tooltip>
           </Col>
           <Col>
             <Tooltip title="删除">
-              <Button type="primary" icon={<DeleteOutlined />} />
+              <Button
+                type="primary"
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  handleDelete(record.id);
+                }}
+              />
             </Tooltip>
           </Col>
         </Row>
@@ -191,6 +214,8 @@ export default () => {
         rowSelection={{ type: "checkbox", ...rowSelection }}
         dataSource={data ? data?.data : []}
         columns={columns.map((c) => ({ ...c, key: c.dataIndex }))}
+        loading={!data?.success}
+        pagination={{ total: data?.total || 0, pageSize: 10, current: 2 }}
       />
     </div>
   );
