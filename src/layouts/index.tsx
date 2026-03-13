@@ -40,8 +40,8 @@ export default () => {
   );
   const handleOk = () => {
     setIsModalOpen(false);
-    if (location.pathname !== "/user") {
-      navigate("/user");
+    if (location.pathname !== "/information") {
+      navigate("/information");
     }
   };
   const handleCancel = () => {

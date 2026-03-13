@@ -14,6 +14,13 @@ export const menuHash: any = {
   "works/recognition": {
     label: "认定",
   },
+  information: {
+    label: "讯息广场",
+    icon: <PieChartOutlined />,
+  },
+  "information/notary-information": {
+    label: "所有信息",
+  },
   "/services": {
     label: "服务受理",
     icon: <PieChartOutlined />,
