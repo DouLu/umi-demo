@@ -14,6 +14,10 @@ export const menuHash: any = {
   "works/recognition": {
     label: "认定",
   },
+  "works/recognition/info": {
+    hidden: true,
+    label: "认定-一般笔记",
+  },
   information: {
     label: "讯息广场",
     icon: <PieChartOutlined />,
@@ -37,6 +41,9 @@ export const menuHash: any = {
     label: "用户",
     icon: <UserOutlined />,
   },
+  login: {
+    hidden: true,
+  },
 };
 
 // 控制菜单是否有权限可见
@@ -46,6 +53,7 @@ export type MenuNode = {
   key: number | string;
   label: string | React.ElementType;
   icon?: React.ElementType;
+  hidden?: boolean;
   children?: MenuNode[];
 };
 
@@ -53,7 +61,7 @@ const getLinkLabel = (path: string) => {
   if (!menuHash[path]) {
     return {};
   }
-  const { label, icon } = menuHash[path];
+  const { label, icon = <></>, hidden = false } = menuHash[path];
   return {
     icon,
     label: (
@@ -61,6 +69,7 @@ const getLinkLabel = (path: string) => {
         {label}
       </Link>
     ),
+    hidden,
   };
 };
 

@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from "antd";
 import { useState } from "react";
+import { history } from "umi";
 
 type FieldType = {
   idInfo?: { id: string; name: string; date?: string };
@@ -76,6 +77,7 @@ export default () => {
 
   const handleEdit = async (record: DataType) => {
     alert(record.sId);
+    history.push(`/works/recognition/info?id=${record.id}`);
   };
 
   const handleDelete = async (id: string) => {

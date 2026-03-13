@@ -21,12 +21,14 @@
     "umi": "^4.6.31"
   },
   "devDependencies": {
+    "@ant-design/pro-components": "^2.8.10",
     "@types/mockjs": "^1.0.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@umijs/plugins": "^4.6.31",
     "ahooks": "^3.9.6",
     "cross-env": "^10.1.0",
+    "rc-field-form": "^2.7.1",
     "typescript": "^5"
   }
 }
