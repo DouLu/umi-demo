@@ -6,4 +6,5 @@ export default defineConfig({
   plugins: ["@umijs/plugins/dist/antd", "@umijs/plugins/dist/model"],
   antd: {},
   model: {},
+  esbuildMinifyIIFE: true
 });
