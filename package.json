@@ -7,7 +7,8 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env ANALYZE=1 umi build",
+    "build": "umi build",
+    "build1": "cross-env ANALYZE=1 umi build",
     "start": "cross-env PORT=3000 umi dev"
   },
   "dependencies": {
